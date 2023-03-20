@@ -1,0 +1,110 @@
+<p-toast></p-toast>
+<div class="container-fluid">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-5 align-self-center">
+        <canvas id="graph" #canvas (click)="canvasClick($event)">
+          CANVAS NOT SUPPORTED IN THIS BROWSER!
+        </canvas>
+        <div class="card card-body">
+          <form
+            name="form"
+            #f="ngForm"
+            (ngSubmit)="f.form.valid && onSubmit()"
+            novalidate
+          >
+            <p-selectButton
+              [options]="xyVals"
+              name="X"
+              [(ngModel)]="form.X"
+              #X="ngModel"
+              required
+              [ngClass]="{'is-invalid': f.submitted && X.errors}"
+              styleClass="min-w-min"
+            ></p-selectButton>
+            <div class="invalid-feedback d-block">
+              <div [ngClass]="{'invisible': !(f.submitted && X.errors && X.errors['required'])}">Выберите X</div>
+            </div>
+
+            <span class="p-float-label">
+              <input
+                class=""
+                id="y-float-input"
+                type="text"
+                pInputText
+                name="Y"
+                [(ngModel)]="form.Y"
+                #Y="ngModel"
+                required
+                numberValidation
+                [ngClass]="{'is-invalid': f.submitted && Y.errors}"
+              >
+              <label for="y-float-input">Введите Y</label>
+            </span>
+            <div class="invalid-feedback d-block">
+              <div *ngIf="f.submitted && Y.errors && Y.errors['notANumber']">Y должно быть числом</div>
+              <div *ngIf="f.submitted && Y.errors && Y.errors['notInRange']">Y должно быть от -3 до 3</div>
+              <div *ngIf="f.submitted && Y.errors && Y.errors['required']">Y не может быть пустым</div>
+              <div *ngIf="!(f.submitted && Y.errors)" class="invisible">Y не может быть пустым</div>
+            </div>
+
+            <p-selectButton
+              [options]="xyVals"
+              name="R"
+              [(ngModel)]="form.R"
+              #R="ngModel"
+              required
+              [ngClass]="{'is-invalid': f.submitted && R.errors}"
+              (click)="rChanged()"
+            ></p-selectButton>
+            <div class="invalid-feedback d-block">
+              <div *ngIf="f.submitted && R.errors && R.errors['required']">Выберите R</div>
+              <div *ngIf="!(f.submitted && R.errors)" class="invisible">Выберите R</div>
+            </div>
+
+            <span class="p-buttonset">
+              <button pButton type="submit" label="Проверить попадание"></button>
+              <button pButton type="button" label="Очистить" icon="pi pi-times" class="p-button-outlined" (click)="onReset(f)"></button>
+            </span>
+          </form>
+
+
+        </div>
+      </div>
+      <div class="col-lg-7">
+
+        <p-table [value]="dots" [tableStyle]="{'min-width': '5rem'}" [scrollable]="true" scrollHeight="600px">
+          <ng-template pTemplate="caption">
+            <div class="flex">
+              <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="deleteDots()"></button>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th>X</th>
+              <th>Y</th>
+              <th>R</th>
+              <th>Попадание</th>
+              <th>Время</th>
+              <th>Время исполнения скрипта</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-dot let-columns="columns">
+            <tr>
+              <td>{{dot.x}}</td>
+              <td>{{dot.y}}</td>
+              <td>{{dot.r}}</td>
+              <td>
+                <i class="pi" [ngClass]="{'true-icon pi-check-circle': dot.hit, 'false-icon pi-times-circle': !dot.hit}"></i>
+              </td>
+              <td>{{dot.creationDate}}</td>
+              <td>{{dot.execTime}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+      </div>
+    </div>
+  </div>
+</div>

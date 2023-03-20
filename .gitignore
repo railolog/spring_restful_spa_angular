@@ -32,5 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-./frontend/src/main/frontend/node_modules
-/frontend/
+/frontend/src/main/frontend/node_modules
+/frontend/src/main/frontend/.angular
+/frontend/src/main/frontend/.vscode
+/frontend/src/main/frontend/node
